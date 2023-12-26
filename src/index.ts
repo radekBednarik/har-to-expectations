@@ -1,5 +1,12 @@
 import { cli } from "./cli/cli.js";
 
 (async () => {
-  await cli.parseAsync(process.argv);
+  try {
+    
+    await cli.parseAsync(process.argv);
+
+  } catch (err: any) {
+    console.error("program returned error: ${err}");
+    process.exit(1);    
+  }
 })();
