@@ -1,5 +1,5 @@
 {
-  "name": "har-to-expectations",
+  "name": "@bednarik_radek/har-to-expectations",
   "version": "1.0.0",
   "description": "CLI utility to parse .har files and convert selected requests/responses to mock-server expectation objects saved in .json file",
   "main": "dist/index.js",
