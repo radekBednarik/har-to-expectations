@@ -1,0 +1,31 @@
+{
+  "name": "har-to-expectations",
+  "version": "1.0.0",
+  "description": "CLI utility to parse .har files and convert selected requests/responses to mock-server expectation objects saved in .json file",
+  "main": "index.js",
+  "type": "module",
+  "bin": {
+    "convert-har": "dist/bin/index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/har-format": "^1.2.15",
+    "@types/node": "^20.10.5",
+    "@typescript-eslint/eslint-plugin": "^6.16.0",
+    "@typescript-eslint/parser": "^6.16.0",
+    "eslint": "^8.56.0",
+    "prettier": "^3.1.1",
+    "typescript": "^5.3.3"
+  },
+  "prettier": {
+    "printWidth": 109
+  },
+  "dependencies": {
+    "commander": "^11.1.0"
+  }
+}
