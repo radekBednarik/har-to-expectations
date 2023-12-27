@@ -17,7 +17,7 @@ export interface HttpResponse {
   body?: string | Record<string, unknown>;
 }
 
-export function parser(harObject: Har) {
+export function parser(harObject: Har, regex: string) {
   const entries = harObject.log.entries;
 
   if (entries.length === 0) {
@@ -25,9 +25,16 @@ export function parser(harObject: Har) {
   }
 
   const expectations: MockExpectation[] = [];
+  const regexPattern = new RegExp(regex);
 
   for (const entry of entries) {
     const request = entry.request;
+    const requestUrl = request.url;
+
+    if (!regexPattern.test(requestUrl)) {
+      continue;
+    }
+
     const requestQueryParams = request.queryString;
     const response = entry.response;
 
