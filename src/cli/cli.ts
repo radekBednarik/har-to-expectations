@@ -16,5 +16,8 @@ cli
   .action(async (harPath, jsonPath, regex) => {
     const harObject = await readHarFile(harPath);
     const expectations = parser(harObject, regex);
-    await writeJsonFile(expectations, jsonPath);
+
+    if (expectations !== null) {
+      await writeJsonFile(expectations, jsonPath);
+    }
   });
