@@ -7,6 +7,7 @@ CLI tool to convert HAR file to expectations .json file which is ready for the [
 ```bash
 npm install -g @bednarik_radek/har-to-expectations
 ```
+
 ## Usage
 
 ```bash
