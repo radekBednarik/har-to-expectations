@@ -14,7 +14,7 @@ npm install -g @bednarik_radek/har-to-expectations
 
 ## Usage
 
-To display CLI help, run:
+To display CLI help run:
 
 ```bash
 npx har -h
