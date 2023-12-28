@@ -13,9 +13,19 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "husky install"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "cli",
+    "har",
+    "mock-server",
+    "expectations"
+  ],
+  "author": "Radek Bednarik<bednarik.radek@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:radekBednarik/har-to-expectations.git"
+  },
+  "readme": "https://github.com/radekBednarik/har-to-expectations/blob/main/README.md",
   "devDependencies": {
     "@types/har-format": "^1.2.15",
     "@types/node": "^20.10.5",
