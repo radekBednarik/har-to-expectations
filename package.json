@@ -10,7 +10,8 @@
   "scripts": {
     "build": "rimraf dist && tsc",
     "devBuild": "rimraf dist && tsc && cd dist && npm link && chmod +x bin/har.js && cd ..",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky install"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +22,8 @@
     "@typescript-eslint/eslint-plugin": "^6.16.0",
     "@typescript-eslint/parser": "^6.16.0",
     "eslint": "^8.56.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0",
     "prettier": "^3.1.1",
     "rimraf": "^5.0.5",
     "typescript": "^5.3.3"
@@ -31,5 +34,12 @@
   },
   "dependencies": {
     "commander": "^11.1.0"
+  },
+  "lint-staged": {
+    "*.{ts,js}": [
+      "prettier --write",
+      "eslint --cache"
+    ],
+    "*.{json,md}": "prettier --write"
   }
 }
