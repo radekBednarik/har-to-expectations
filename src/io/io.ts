@@ -1,14 +1,19 @@
 import { readFile, writeFile } from "fs/promises";
 import { resolve } from "path";
 import { Har } from "har-format";
+import { logger } from "../logger/logger.js";
+
+const log = logger.child({ module: "io" });
 
 export async function readHarFile(filepath: string) {
   const fullPath = resolve(filepath);
 
+  log.info(`reading .har file from ${fullPath}`);
+
   try {
     return JSON.parse(await readFile(fullPath, { encoding: "utf-8" })) as Har;
   } catch (err: any) {
-    console.error(`func readHarFile returned error: ${err}`);
+    log.error(`func readHarFile returned error: ${err}`);
     throw err;
   }
 }
@@ -16,10 +21,12 @@ export async function readHarFile(filepath: string) {
 export async function writeJsonFile(data: any, filepath: string) {
   const fullPath = resolve(filepath);
 
+  log.info(`writing JSON data to ${fullPath}`);
+
   try {
     await writeFile(fullPath, JSON.stringify(data, null, 2));
   } catch (err: any) {
-    console.error(`func writeJsonFile returned error: ${err}`);
+    log.error(`func writeJsonFile returned error: ${err}`);
     throw err;
   }
 }

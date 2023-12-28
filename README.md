@@ -69,3 +69,9 @@ This utility is not doing full `.har`-to-`.json` conversion. It is only converti
 
   - status code
   - response body, if it is present
+
+## Logging
+
+- provide:
+  - `LOG_LEVEL` ENV variable to set the log level. Default is `info`
+  - `LOG_ENABLED=true` ENV variable to enable logging. Default is `false`. Logging is done only to console. It is pretty-printed.

@@ -1,4 +1,7 @@
 import { Har } from "har-format";
+import { logger } from "../logger/logger.js";
+
+const log = logger.child({ module: "parser-har-to-expectations" });
 
 export interface MockExpectation {
   httpRequest: HttpRequest;
@@ -18,81 +21,115 @@ export interface HttpResponse {
 }
 
 export function parser(harObject: Har, regex: string) {
-  const entries = harObject.log.entries;
+  try {
+    log.info("Parsing HAR file to expectations");
+    log.debug(`HAR file content: ${JSON.stringify(harObject)}`);
 
-  if (entries.length === 0) {
-    return null;
+    const entries = harObject.log.entries;
+
+    if (entries.length === 0) {
+      log.warn("No entries found in the HAR file");
+
+      return null;
+    }
+
+    const expectations: MockExpectation[] = [];
+    const regexPattern = new RegExp(regex);
+
+    for (const entry of entries) {
+      log.debug(`Parsing HAR entry: ${JSON.stringify(entry)}`);
+
+      const request = entry.request;
+      const requestUrl = request.url;
+
+      if (!regexPattern.test(requestUrl)) {
+        continue;
+      }
+
+      const requestQueryParams = request.queryString;
+      const response = entry.response;
+
+      const expectation: MockExpectation = {
+        httpRequest: {
+          method: request.method,
+          path: getRequestPath(request.url),
+        },
+        httpResponse: {
+          statusCode: response.status,
+        },
+      };
+
+      if (requestQueryParams.length > 0) {
+        expectation.httpRequest.queryStringParameters = getQueryParameters(requestQueryParams);
+      }
+
+      if (typeof response.content.text !== "undefined") {
+        expectation.httpResponse.body = getResponseBody(response.content.text);
+      }
+
+      if (typeof request.postData?.text !== "undefined") {
+        expectation.httpRequest.body = getRequestBody(request.postData.text);
+      }
+
+      expectations.push(expectation);
+      log.debug(`Expectation parsed to: ${JSON.stringify(expectation)}`);
+    }
+
+    log.debug(`Expectations array with expectations: ${expectations}`);
+    log.info("Har entries parsed to expectations array.");
+
+    return expectations;
+  } catch (error: any) {
+    log.error(`Error when parsing Har data: ${JSON.stringify(error)}`);
+    throw error;
   }
-
-  const expectations: MockExpectation[] = [];
-  const regexPattern = new RegExp(regex);
-
-  for (const entry of entries) {
-    const request = entry.request;
-    const requestUrl = request.url;
-
-    if (!regexPattern.test(requestUrl)) {
-      continue;
-    }
-
-    const requestQueryParams = request.queryString;
-    const response = entry.response;
-
-    const expectation: MockExpectation = {
-      httpRequest: {
-        method: request.method,
-        path: getRequestPath(request.url),
-      },
-      httpResponse: {
-        statusCode: response.status,
-      },
-    };
-
-    if (requestQueryParams.length > 0) {
-      expectation.httpRequest.queryStringParameters = getQueryParameters(requestQueryParams);
-    }
-
-    if (typeof response.content.text !== "undefined") {
-      expectation.httpResponse.body = getResponseBody(response.content.text);
-    }
-
-    if (typeof request.postData?.text !== "undefined") {
-      expectation.httpRequest.body = getRequestBody(request.postData.text);
-    }
-
-    expectations.push(expectation);
-  }
-
-  return expectations;
 }
 
 function getQueryParameters(queryParams: any[]) {
-  if (queryParams.length === 0) {
-    return undefined;
-  }
+  log.info("Parsing query parameters");
+  log.debug(`Query parameters: ${JSON.stringify(queryParams)}`);
 
-  const queryParameters: Record<string, string[]> = {};
-
-  for (const param of queryParams) {
-    const name = param.name;
-    const value = param.value;
-
-    if (Object.prototype.hasOwnProperty.call(queryParameters, name)) {
-      queryParameters[name]!.push(value);
-    } else {
-      queryParameters[name] = [value];
+  try {
+    if (queryParams.length === 0) {
+      return undefined;
     }
-  }
 
-  return queryParameters;
+    const queryParameters: Record<string, string[]> = {};
+
+    for (const param of queryParams) {
+      const name = param.name;
+      const value = param.value;
+
+      if (Object.prototype.hasOwnProperty.call(queryParameters, name)) {
+        queryParameters[name]!.push(value);
+      } else {
+        queryParameters[name] = [value];
+      }
+    }
+    log.info("Query parameters parsed");
+    log.debug(`Query parameters parsed to: ${JSON.stringify(queryParameters)}`);
+
+    return queryParameters;
+  } catch (error: any) {
+    log.error(`Error when parsing query parameters: ${JSON.stringify(error)}`);
+    throw error;
+  }
 }
 
 function getRequestPath(url: string) {
-  const urlObject = new URL(url);
-  return urlObject.pathname;
+  try {
+    const urlObject = new URL(url);
+    return urlObject.pathname;
+  } catch (error: any) {
+    log.error(`Error when parsing request path: ${JSON.stringify(error)}`);
+    throw error;
+  }
 }
 
 function getResponseBody(body: string) {
+  log.info("Parsing response body");
+  log.debug(`Response body: ${JSON.stringify(body)}`);
+
   try {
     return JSON.parse(body);
   } catch (err: any) {
@@ -103,6 +140,9 @@ function getResponseBody(body: string) {
 }
 
 function getRequestBody(body: string) {
+  log.info("Parsing request body");
+  log.debug(`Request body: ${JSON.stringify(body)}`);
+
   try {
     return {
       type: "JSON",
