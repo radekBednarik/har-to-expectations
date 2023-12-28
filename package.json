@@ -44,7 +44,9 @@
     "tabWidth": 2
   },
   "dependencies": {
-    "commander": "^11.1.0"
+    "commander": "^11.1.0",
+    "pino": "^8.17.2",
+    "pino-pretty": "^10.3.1"
   },
   "lint-staged": {
     "*.{ts,js}": [
