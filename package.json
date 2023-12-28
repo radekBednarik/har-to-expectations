@@ -23,7 +23,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git@github.com:radekBednarik/har-to-expectations.git"
+    "url": "git+ssh//git@github.com:radekBednarik/har-to-expectations.git"
   },
   "readme": "https://github.com/radekBednarik/har-to-expectations/blob/main/README.md",
   "devDependencies": {
