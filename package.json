@@ -51,5 +51,6 @@
       "eslint --cache"
     ],
     "*.{json,md}": "prettier --write"
-  }
+  },
+  "types": "dist/types.d.ts"
 }
