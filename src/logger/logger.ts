@@ -4,9 +4,7 @@ const transport = pino.transport({
   targets: [
     {
       target: "pino-pretty",
-      options: {
-        level: process.env["LOG_LEVEL"] ? process.env["LOG_LEVEL"] : "info",
-      },
+      level: process.env["LOG_LEVEL"] ? process.env["LOG_LEVEL"] : "info",
     },
   ],
 });

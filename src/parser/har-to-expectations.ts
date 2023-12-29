@@ -1,5 +1,6 @@
 import { Har } from "har-format";
 import { logger } from "../logger/logger.js";
+import ProgressBar from "../cli/progress-bar.js";
 
 const log = logger.child({ module: "parser-har-to-expectations" });
 
@@ -35,8 +36,13 @@ export function parser(harObject: Har, regex: string) {
 
     const expectations: MockExpectation[] = [];
     const regexPattern = new RegExp(regex);
+    const progressBar = new ProgressBar(process.env["LOG_ENABLED"]);
+
+    progressBar.start(entries.length);
 
     for (const entry of entries) {
+      progressBar.increment();
+
       log.debug(`Parsing HAR entry: ${JSON.stringify(entry)}`);
 
       const request = entry.request;
@@ -74,6 +80,8 @@ export function parser(harObject: Har, regex: string) {
       expectations.push(expectation);
       log.debug(`Expectation parsed to: ${JSON.stringify(expectation)}`);
     }
+
+    progressBar.stop();
 
     log.debug(`Expectations array with expectations: ${expectations}`);
     log.info("Har entries parsed to expectations array.");
