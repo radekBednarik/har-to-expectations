@@ -10,6 +10,7 @@
   "scripts": {
     "build": "rimraf dist && tsc",
     "devBuild": "rimraf dist && tsc && cd dist && npm link && chmod +x bin/har.js && cd ..",
+    "bunBuild": "bun build src/index.ts --compile --target=node --outfile=bun-dist/app",
     "publish": "npm publish --access public",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "husky install"
