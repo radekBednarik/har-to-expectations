@@ -31,6 +31,7 @@
   "devDependencies": {
     "@types/cli-progress": "^3.11.5",
     "@types/har-format": "^1.2.15",
+    "@types/lodash": "^4.17.0",
     "@types/node": "^20.10.5",
     "@typescript-eslint/eslint-plugin": "^6.16.0",
     "@typescript-eslint/parser": "^6.16.0",
@@ -48,6 +49,7 @@
   "dependencies": {
     "cli-progress": "^3.12.0",
     "commander": "^11.1.0",
+    "lodash": "^4.17.21",
     "pino": "^8.17.2",
     "pino-pretty": "^10.3.1"
   },

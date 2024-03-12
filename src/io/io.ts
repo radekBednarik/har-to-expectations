@@ -18,6 +18,19 @@ export async function readHarFile(filepath: string) {
   }
 }
 
+export async function readJsonFile(filepath: string) {
+  const fullpath = resolve(filepath);
+
+  log.info(`reading .json file from ${fullpath}`);
+
+  try {
+    return JSON.parse(await readFile(fullpath, { encoding: "utf8" })) as any;
+  } catch (err: any) {
+    log.error(`func readJsonFile returned error: ${err}`);
+    throw err;
+  }
+}
+
 export async function writeJsonFile(data: any, filepath: string) {
   const fullPath = resolve(filepath);
 

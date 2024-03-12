@@ -1,6 +1,7 @@
 import { Har } from "har-format";
 import { logger } from "../logger/logger.js";
 import ProgressBar from "../cli/progress-bar.js";
+import lodash from "lodash";
 
 const log = logger.child({ module: "parser-har-to-expectations" });
 
@@ -91,6 +92,58 @@ export function parser(harObject: Har, regex: string) {
     log.error(`Error when parsing Har data: ${JSON.stringify(error)}`);
     throw error;
   }
+}
+
+export function merger(
+  existingJsonObject: MockExpectation[],
+  parsedHarObject: MockExpectation[],
+  update: boolean,
+): MockExpectation[] {
+  try {
+    const bar = new ProgressBar(process.env["LOG_ENABLED"]);
+    bar.start(parsedHarObject.length);
+
+    log.info(`merging ${JSON.stringify(parsedHarObject)} into ${JSON.stringify(existingJsonObject)}`);
+
+    for (const expectation of parsedHarObject) {
+      bar.increment();
+
+      for (const existingExpectation of existingJsonObject) {
+        // it is the same expectation request
+        // and we do not want to update
+        if (isEqual(expectation.httpRequest, existingExpectation.httpRequest) && !update) {
+          break;
+        }
+
+        // it is the same expectation request
+        // and we want to update
+        if (isEqual(expectation.httpRequest, existingExpectation.httpRequest) && update) {
+          existingExpectation.httpResponse = expectation.httpResponse;
+          break;
+        }
+      }
+
+      // new expectation - so just add
+      existingJsonObject.push(expectation);
+    }
+
+    bar.stop();
+
+    log.info(`merge finished with result object: ${JSON.stringify(existingJsonObject)}`);
+
+    return existingJsonObject;
+  } catch (error) {
+    log.error(`error in func merger: ${error}`);
+    throw error;
+  }
+}
+
+function isEqual(obj1: HttpRequest, obj2: HttpRequest) {
+  if (lodash.isEqual(obj1, obj2)) {
+    return true;
+  }
+
+  return false;
 }
 
 function getQueryParameters(queryParams: any[]) {
