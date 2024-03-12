@@ -30,8 +30,11 @@ Options:
 
 Commands:
   convert <harPath> <jsonPath> <regex>  converts .har file to .json file with expectations.
+  merge [options] <harPath> <jsonPath> <regex> merges new .har file into existing .json expectations file.
   help [command]                        display help for command
 ```
+
+## conversion
 
 ### Example
 
@@ -69,6 +72,18 @@ This utility is not doing full `.har`-to-`.json` conversion. It is only converti
 
   - status code
   - response body, if it is present
+
+## Merging
+
+### Example
+
+- we want to add new expectations to the **existing** .json file
+
+- if expectation alredy exists, we want to update the `httpResponse` part - thus updating the mocked values
+
+```bash
+npx har merge ./network-log.har ./existing-expectations.json --update
+```
 
 ## Logging
 
